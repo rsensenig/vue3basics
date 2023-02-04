@@ -17,20 +17,46 @@
         }
 
         .box.three {
-            background: blue;
+            background-color: blue;
+        }
+
+        .box.four {
+            background-color: aquamarine;
+        }
+
+        /* setting v-cloak attribute to display none */
+        [v-cloak] {
+            display: none;
         }
     </style>
 </head>
 <body>
-    <div id="app">
+    
+    <!-- v-cloak remains on this div until the app is loaded, then it's removed once everything is rendered to the DOM -->
+    <div id="app" v-cloak>
         {{ greeting }}
-        <input v-model="greeting" />
+        <!-- v-model binds to the variable "greeting" -->
+        <!-- <input v-model="greeting" /> -->
+
+        <input @keyup.enter="greet(greeting + '!!!!!')" v-model="greeting" />
 
         <hr />
 
+        <!-- listening for a click event on this button -->
+        <!-- toggles isVisible -->
+        <!-- <button @click="isVisible = !isVisible">Show Box</button> -->
+
+        <button @click="toggleBox">Toggle Box</button>
+
+        <!-- v-if binds to the variable "isVisible" -->
+        <!-- if "isVisible" is truthy, the div will be displayed on the DOM -->
+        <!-- if "isVisible" is false, the div will not be displayed on the DOM at all -->
         <div v-if="isVisible" class="box"></div>
-        <div v-else-if="isVisible2" class="box two"></div>
-        <div v-else class="box three"></div>
+        <!-- <div v-else-if="isVisible2" class="box two"></div>
+        <div v-else class="box three"></div> -->
+
+        <!-- when "isVisible3" is false, the div is still rendered to the DOM, but the box won't show -->
+        <div v-show="isVisible3" class="box four"></div>
     </div>
 
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
@@ -38,12 +64,26 @@
         let app = Vue.createApp({
             data: function() {
                 return {
+                    // the variable greeting can be changed here to change the greeting that displays in <input /> above
                     greeting: 'Hello Vue 3!',
+                    // this variable is bound to v-if above
                     isVisible: false,
-                    isVisible2: false
+                    isVisible2: false,
+                    isVisible3: false
                 }
-            }
+            },
+            // methods is an object of functions
+            methods: {
+                    toggleBox() {
+                        return this.isVisible = !this.isVisible
+                    },
+                    greet(greeting) {
+                        console.log(greeting);
+                    }
+                }
         })
+        
+        // attaches the Vue application to the div with the class of app
         app.mount('#app')
     </script>
 </body>
